@@ -34,9 +34,9 @@ elapsed_ms = 59100 ms
 Процент нагрузки = (cpu_ms / elapsed_ms) × 100%
 
 ### Prometheus и Grafana
-![img_1.png](img_1.png)
+![img.png](images%2Fimg.png)
 
-![img_3.png](img_3.png)
+![img_1.png](images%2Fimg_1.png)
 
 ![img_2.png](images%2Fimg_2.png)
 

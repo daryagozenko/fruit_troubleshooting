@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,4 +56,44 @@ class FruitControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, Objects.requireNonNull(response.getBody()).size());
     }
+
+    @Test
+    void getFruitById_WhenFruitExists_ShouldReturnFruit() {
+        when(fruitService.getFruitById(1L)).thenReturn(testFruit);
+
+        ResponseEntity<Fruit> response = fruitController.getFruitById(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Яблоко", response.getBody().getName());
+        assertEquals(150, response.getBody().getPrice());
+    }
+
+    @Test
+    void getFruitById_WhenFruitDoesNotExist_ShouldReturnNotFound() {
+        when(fruitService.getFruitById(99L)).thenReturn(null);
+
+        ResponseEntity<Fruit> response = fruitController.getFruitById(99L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void getAllFruitByName_WhenFruitsExist_ShouldReturnFruits() throws InterruptedException {
+        List<Fruit> fruits = Arrays.asList(testFruit, testFruit);
+        when(fruitService.getAllFruitByName("Яблоко")).thenReturn(fruits);
+
+        ResponseEntity<List<Fruit>> response = fruitController.getAllFruitByName("Яблоко");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, Objects.requireNonNull(response.getBody()).size());
+    }
+
+    @Test
+    void getAllFruitByName_WhenNameIsWhitespace_ShouldReturnBadRequest() throws InterruptedException {
+        ResponseEntity<List<Fruit>> response = fruitController.getAllFruitByName("   ");
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
 }
